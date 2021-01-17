@@ -1,0 +1,66 @@
+---
+title: "Getting Started"
+author: "Artur Assis Alves"
+date: "05/05/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown
+
+Book    : Data Analysis for the Life Sciences
+Chapter : Getting started
+
+
+## Exercise 5:
+
+
+To create a vector with the numbers 3 to 7, we can use seq(3,7) or, because they are consecutive, 3:7. View the data and determine what rows are associated with the high fat or hf diet. Then use the mean function to compute the average weight of these mice.
+
+
+## Slide with R Output
+
+```{r hf_diets, echo=FALSE}
+data   <- read.csv("femaleMiceWeights.csv")
+IN     <- TRUE
+OUT    <- FALSE
+result <- c()
+state  <- OUT
+for (i in 1:length(data$Diet)) {
+    if (!state){
+        if (data$Diet[i] == "hf"){ 
+            state  <- IN
+            result <- append(result, i) #Defines the starting point.
+        }
+    }
+    else if (data$Diet[i] != "hf"){
+        state  <- OUT
+        result <- append(result, i - 1) #Defines the finishing point.
+    }
+    if ( (i == length(data$Diet)) && (data$Diet[i] == "hf") ){
+        result <- append(result, i) #Defines the finishing point.
+    }
+}
+result <- matrix(result, nrow = length(result)/2, ncol = 2)
+show(result)
+```
+
+## Slide with R Output
+
+```{r}
+#OBS: The same code could have been done with: data[data$BodyWeight == "hf",]
+total_sum <- 0
+n         <- 0
+for (i in 1:length(result[, 1])) {
+    n <- n + (result[i, 2] - result[i, 1] +1) 
+    total_sum <- sum(data$Bodyweight[result[i, 1]:result[i, 2]])
+}
+mean_weigth <- total_sum/n
+print("The mean of the wightbody of the mice is : ")
+show(mean_weigth)
+```
+
+
